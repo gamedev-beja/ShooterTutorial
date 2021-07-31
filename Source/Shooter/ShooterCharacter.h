@@ -41,6 +41,9 @@ protected:
 
 	void CameraInterpZoom(float DeltaTime);
 
+	//Set BaseTurnRate and BaseLookUpRate based on aiming
+	void SetLookRates();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -97,10 +100,24 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	float ZoomInterpSpeed;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"));
+	float HipTurnRate;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"));
+	float HipLookUpRate;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"));
+	float AimingTurnRate;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"));
+	float AimingLookUpRate;
+
 public:
 	/*Returns CameraBoom subobject*/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 	/*Returns FollowCamera subobject*/
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	FORCEINLINE bool GetAiming() const { return bAiming; }
 };

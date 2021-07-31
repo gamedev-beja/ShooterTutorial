@@ -15,13 +15,21 @@
 
 // Sets default values
 AShooterCharacter::AShooterCharacter() :
+	//Base rates for turning/Looking up
 	BaseTurnRate(45.f),
 	BaseLookUpRate(45.f),
+	//Turn rates for aiming/not aiming
+	HipTurnRate(90.f),
+	HipLookUpRate(90.f),
+	AimingTurnRate(20.f),
+	AimingLookUpRate(20.f),
 	bAiming(false),
+	//Camera FOV values
 	CameraDefaultFOV(0.f), //set in beginplay
 	CameraZoomedFOV(50.f),
 	CameraCurrentFOV(0.f),
 	ZoomInterpSpeed(20.f)
+
 
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -62,6 +70,17 @@ void AShooterCharacter::BeginPlay()
 		CameraCurrentFOV = CameraDefaultFOV;
 	}
 
+}
+
+// Called every frame
+void AShooterCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	//Handle Inpterp zoom when aiming
+	CameraInterpZoom(DeltaTime);
+	//Change look sensitivity based on aiming
+	SetLookRates();
 }
 
 void AShooterCharacter::MoveForward(float value)
@@ -221,14 +240,18 @@ void AShooterCharacter::CameraInterpZoom(float DeltaTime)
 	GetFollowCamera()->SetFieldOfView(CameraCurrentFOV);
 }
 
-// Called every frame
-void AShooterCharacter::Tick(float DeltaTime)
+void AShooterCharacter::SetLookRates()
 {
-	Super::Tick(DeltaTime);
-
-	//Handle Inpterp zoom when aiming
-	CameraInterpZoom(DeltaTime);
-	
+	if (bAiming)
+	{
+		BaseTurnRate = AimingTurnRate;
+		BaseLookUpRate = AimingLookUpRate;
+	}
+	else
+	{
+		BaseTurnRate = HipTurnRate;
+		BaseLookUpRate = HipLookUpRate;
+	}
 }
 
 // Called to bind functionality to input
