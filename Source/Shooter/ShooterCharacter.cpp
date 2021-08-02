@@ -13,7 +13,7 @@
 #include "Particles/ParticleSystemComponent.h"
 
 
-// Sets default values
+// AShooterCharacter::AShooterCharacter class constructor - to intialize values for this specific class
 AShooterCharacter::AShooterCharacter() :
 	//Base rates for turning/Looking up
 	BaseTurnRate(45.f),
