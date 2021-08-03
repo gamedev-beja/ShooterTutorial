@@ -44,6 +44,14 @@ protected:
 	//Set BaseTurnRate and BaseLookUpRate based on aiming
 	void SetLookRates();
 
+	//Rotate controller based on mouse X movement @param value.  Th einput value from mouse movement
+	void Turn(float value);
+
+	//Rotate controller based on mouse Y movement @param value.  Th einput value from mouse movement
+	void LookUp(float value);
+
+	void CalculateCrosshairSpread(float DeltaTime);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -100,17 +108,53 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	float ZoomInterpSpeed;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"));
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"));
 	float HipTurnRate;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"));
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"));
 	float HipLookUpRate;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"));
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"));
 	float AimingTurnRate;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"));
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0",ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"));
 	float AimingLookUpRate;
+
+	//Scale factor for mousew look sensativity.  Look up rate when not aiming
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"));
+	float MouseHipTurnRate;
+
+	//Scale factor for mousew look sensativity.  Turn rate when not aiming
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"));
+	float MouseHipLookUpRate;
+
+	//Scale factor for mousew look sensativity.  Turn rate when aiming
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"));
+	float MouseAimingTurnRate;
+	//Scale factor for mousew look sensativity.  Look up rate when aiming
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"));
+	float MouseAimingLookUpRate;
+
+	//Determines the spread of the crosshairs
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Crosshairs, meta = (AllowPrivateAccess = "true"));
+	float CrosshairSpreadMultiplier;
+
+	//Velocity component for crosshairs spread
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Crosshairs, meta = (AllowPrivateAccess = "true"));
+	float CrosshairVelocityFactor;
+
+	//In air component for crosshairs spread
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Crosshairs, meta = (AllowPrivateAccess = "true"));
+	float CrosshairInAirFactor;
+
+	//Aim component for crosshairs spread
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Crosshairs, meta = (AllowPrivateAccess = "true"));
+	float CrosshairAimFactor;
+
+	//Shooting component for crosshairs spread
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Crosshairs, meta = (AllowPrivateAccess = "true"));
+	float CrosshairShootingFactor;
 
 public:
 	/*Returns CameraBoom subobject*/
@@ -120,4 +164,7 @@ public:
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	FORCEINLINE bool GetAiming() const { return bAiming; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetCrosshairSpreadMultiplier()const;
 };
