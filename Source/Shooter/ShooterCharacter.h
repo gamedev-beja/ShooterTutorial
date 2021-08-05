@@ -57,6 +57,13 @@ protected:
 	UFUNCTION()
 	void FinishCrosshairBulletFire();
 
+	void FireButtonPressed();
+	void FireButtonReleased();
+	void StartFireTimer();
+
+	UFUNCTION()
+	void AutoFireReset();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -161,11 +168,25 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Crosshairs, meta = (AllowPrivateAccess = "true"));
 	float CrosshairShootingFactor;
 
+	//Left mousebutton or right console trigger pressed
+	bool bFireButtonPressed;
+
+	//True when we can fire.  False when we are waiting for the timer
+	bool bShouldFire;
+
+	//Rate of automatic gun fire
+	float AutomaticFireRate;
+
+	//Sets a timer between gunshots
+	FTimerHandle AutoFireTimer;
+
 	float ShootTimeDuration;
 
 	bool bFiringBullet;
 
 	FTimerHandle CrosshairShootTimer;
+
+
 
 public:
 	/*Returns CameraBoom subobject*/
