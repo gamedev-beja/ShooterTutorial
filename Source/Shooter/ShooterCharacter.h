@@ -76,6 +76,11 @@ protected:
 	//Takes a weapona nd attaches it to the mesh
 	void EquipWeapon(AWeapon* WeaponToEquip);
 
+	//Dettach Weapon and let it fall to the ground
+	void DropWeapon();
+
+	void SelectButtonPressed();
+	void SelectButtonReleased();
 
 public:	
 	// Called every frame

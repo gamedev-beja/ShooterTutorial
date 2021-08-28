@@ -49,6 +49,9 @@ void AItem::BeginPlay()
 	// Setup overlap for AreaSphere
 	AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereOverlap);
 	AreaSphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnSphereEndOverlap);
+
+	//Set Item Properties based on ItemState
+	SetItemProperties(ItemState);
 	
 }
 
@@ -114,10 +117,56 @@ void AItem::SetActiveStars()
 	}
 }
 
+void AItem::SetItemProperties(EItemState State)
+{
+	switch (State)
+	{
+	case EItemState::EIS_Pickup:
+
+		//SetMeshProperties
+		ItemMesh->SetSimulatePhysics(false);
+		ItemMesh->SetVisibility(true);
+		ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		//AreaSphereProperties
+		AreaSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+		AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+
+		//CollisionBoxProperties
+		CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
+		CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+		break;
+
+	case EItemState::EIS_Equipped:
+
+		//SetMeshProperties
+		ItemMesh->SetSimulatePhysics(false);
+		ItemMesh->SetVisibility(true);
+		ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		//AreaSphereProperties
+		AreaSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		//CollisionBoxProperties
+		CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+}
+
 // Called every frame
 void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
+void AItem::SetItemState(EItemState State)
+{
+	ItemState = State;
+	SetItemProperties(State);
+}
