@@ -52,7 +52,6 @@ void AItem::BeginPlay()
 
 	//Set Item Properties based on ItemState
 	SetItemProperties(ItemState);
-	
 }
 
 void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -125,6 +124,7 @@ void AItem::SetItemProperties(EItemState State)
 
 		//SetMeshProperties
 		ItemMesh->SetSimulatePhysics(false);
+		ItemMesh->SetEnableGravity(false);
 		ItemMesh->SetVisibility(true);
 		ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -144,9 +144,9 @@ void AItem::SetItemProperties(EItemState State)
 
 		//SetMeshProperties
 		ItemMesh->SetSimulatePhysics(false);
+		ItemMesh->SetEnableGravity(false);
 		ItemMesh->SetVisibility(true);
 		ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-		ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		//AreaSphereProperties
@@ -156,6 +156,24 @@ void AItem::SetItemProperties(EItemState State)
 		//CollisionBoxProperties
 		CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	case EItemState::EIS_Falling:
+		//Set Mesh Properties
+		ItemMesh->SetSimulatePhysics(true);
+		ItemMesh->SetEnableGravity(true);
+		ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		ItemMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		ItemMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
+
+		//AreaSphereProperties
+		AreaSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		//CollisionBoxProperties
+		CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		CollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		break;
 	}
 }
 
